@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fromEvent, of } from 'rxjs';
-import { filter,map } from 'rxjs/operators';
+import { filter,map,tap } from 'rxjs/operators';
 import InputComponent from './Input';
 import { inputFormProps, inputFormState } from './input.d';
 
@@ -23,17 +23,21 @@ export default class Input extends React.Component<inputFormProps, inputFormStat
       .subscribe({
         next: (value: string) => this.setState({ inputValue: value })
       })
-
   }
 
-  public componentDidMount() {
+  public bindKeyEnter(){
     const $body = document.body;
     fromEvent($body, 'keydown')
     .pipe(
       filter((key: KeyboardEvent) => key.keyCode === 13),
+      tap((key:KeyboardEvent) => console.log(key)),
       map(() => this.onBtnClick())
     )
     .subscribe();
+  }
+
+  public componentDidMount() {
+    this.bindKeyEnter();
   }
 
   public render() {
