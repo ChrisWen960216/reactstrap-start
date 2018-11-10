@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fromEvent, of } from 'rxjs';
-import { filter,map,tap } from 'rxjs/operators';
+import { debounceTime,filter,map,tap } from 'rxjs/operators';
 import InputComponent from './Input';
 import { inputFormProps, inputFormState } from './input.d';
 
@@ -30,7 +30,8 @@ export default class Input extends React.Component<inputFormProps, inputFormStat
     fromEvent($body, 'keydown')
     .pipe(
       filter((key: KeyboardEvent) => key.keyCode === 13),
-      tap((key:KeyboardEvent) => console.log(key)),
+      debounceTime(2000),
+      tap((key:KeyboardEvent) => console.log('key', key)),
       map(() => this.onBtnClick())
     )
     .subscribe();
