@@ -1,10 +1,14 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { fromEvent, of } from 'rxjs';
-import { debounceTime,filter,map,tap } from 'rxjs/operators';
+import { debounceTime, filter, map } from 'rxjs/operators';
+import { createItem } from '../../redux/todoiItems/action';
+import getUniqueId from '../../utils/id';
 import InputComponent from './Input';
 import { inputFormProps, inputFormState } from './input.d';
 
-export default class Input extends React.Component<inputFormProps, inputFormState>{
+class Input extends React.Component<inputFormProps, inputFormState>{
   constructor(props: any) {
     super(props);
     this.state = {
@@ -15,7 +19,9 @@ export default class Input extends React.Component<inputFormProps, inputFormStat
   }
 
   public onBtnClick() {
-    console.log(this.state.inputValue);
+    const {todoItems} = this.props;
+    const todoItem = {id:getUniqueId(),content:this.state.inputValue};
+    return this.props.createItem([...todoItems,todoItem])
   }
 
   public onInputValueChange(inputValue: string) {
@@ -25,16 +31,15 @@ export default class Input extends React.Component<inputFormProps, inputFormStat
       })
   }
 
-  public bindKeyEnter(){
+  public bindKeyEnter() {
     const $body = document.body;
     fromEvent($body, 'keydown')
-    .pipe(
-      filter((key: KeyboardEvent) => key.keyCode === 13),
-      debounceTime(2000),
-      tap((key:KeyboardEvent) => console.log('key', key)),
-      map(() => this.onBtnClick())
-    )
-    .subscribe();
+      .pipe(
+        filter((key: KeyboardEvent) => key.keyCode === 13),
+        debounceTime(2000),
+        map(() => this.onBtnClick())
+      )
+      .subscribe();
   }
 
   public componentDidMount() {
@@ -49,3 +54,16 @@ export default class Input extends React.Component<inputFormProps, inputFormStat
       onInputValueChange={this.onInputValueChange} />
   }
 }
+
+function mapStateToProps(state: any) {
+  const { todoItems } = state;
+  return { ...todoItems }
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    createItem: (todos: any) => dispatch(createItem(todos))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Input);
