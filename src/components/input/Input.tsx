@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button, Input } from 'reactstrap';
+import './input.css';
 import { inputComponentProps, inputComponentState } from './input.d';
 
 
@@ -23,10 +24,11 @@ export default class InputComponent extends React.Component<inputComponentProps,
 
   public render() {
     return (
-      <React.Fragment>
+      <div className='input-form'>
+        <header><h1>TodoList By Rxjs && Typescript</h1></header>
         <Input value={this.props.value} onChange={this.onChange} />
-        <Button onClick={this.onClick}>On Click</Button>
-      </React.Fragment>
+        <Button onClick={this.onClick} className='add-btn'>On Click</Button>
+      </div>
     )
   }
 }

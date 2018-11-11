@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { fromEvent, of } from 'rxjs';
-import { debounceTime, filter, map } from 'rxjs/operators';
+import { debounceTime, filter, map, tap } from 'rxjs/operators';
 import { createItem } from '../../redux/todoiItems/action';
 import getUniqueId from '../../utils/id';
 import InputComponent from './Input';
@@ -15,13 +15,23 @@ class Input extends React.Component<inputFormProps, inputFormState>{
       inputValue: ''
     };
     this.onBtnClick = this.onBtnClick.bind(this);
+    this.pushNewItems = this.pushNewItems.bind(this);
     this.onInputValueChange = this.onInputValueChange.bind(this);
   }
 
+  public pushNewItems(value: string) {
+    const { todoItems } = this.props;
+    const todoItem = { id: getUniqueId(), content: value };
+    return this.props.createItem([...todoItems, todoItem]);
+  }
+
   public onBtnClick() {
-    const {todoItems} = this.props;
-    const todoItem = {id:getUniqueId(),content:this.state.inputValue};
-    return this.props.createItem([...todoItems,todoItem])
+    of(this.state.inputValue)
+    .pipe(
+      filter(value => value !== ''),
+      tap(() => this.setState({ inputValue: "" }))
+    ).subscribe(this.pushNewItems)
+
   }
 
   public onInputValueChange(inputValue: string) {
@@ -36,7 +46,7 @@ class Input extends React.Component<inputFormProps, inputFormState>{
     fromEvent($body, 'keydown')
       .pipe(
         filter((key: KeyboardEvent) => key.keyCode === 13),
-        debounceTime(2000),
+        debounceTime(200),
         map(() => this.onBtnClick())
       )
       .subscribe();
