@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import {removeItem} from '../../redux/todoiItems/action';
+import '../../styles/ListItem.css';
 import ListItemComponent from './ListItem';
 import { listItem, ListItemsProps, ListItemState } from './Listitem.d';
 

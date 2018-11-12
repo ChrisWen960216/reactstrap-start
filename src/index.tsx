@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 import App from './components/App';
 import registerServiceWorker from './net/registerServiceWorker';
 import Store from './store';
+import './styles/index.css';
 
 const APP = <Provider store={Store}><App /></Provider>
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button,ListGroupItem } from 'reactstrap';
-import './ListItem.css';
+
 import { ListItemProps, ListItemState } from './Listitem.d';
 
 export default class ListItem extends React.Component<ListItemProps, ListItemState>{

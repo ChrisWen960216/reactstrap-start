@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Input } from 'reactstrap';
-import './input.css';
+import '../../styles/input.css';
 import { inputComponentProps, inputComponentState } from './input.d';
 
 
